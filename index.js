@@ -22,3 +22,8 @@ app.listen(PORT, () => {
 app.get("/test", function(req, res) {
     res.send("running server...");
 });
+
+
+// Routes
+const doctorRoutes = require('./routes/doctorRoutes');
+app.use('/doctor',doctorRoutes );
