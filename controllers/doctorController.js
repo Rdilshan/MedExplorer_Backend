@@ -27,12 +27,17 @@ exports.login = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ error: 'Invalid email or password' });
         }
+
+        if (doctor.checkingSIMC !== 1) {
+            return res.status(403).json({ error: 'Account is not verified. Please contact support.' });
+        }
+        
         const token = jwt.sign({ id: doctor._id }, secret, { expiresIn: '1h' });
         
-        // Set cookie
+
         res.cookie('token', token, {
-            httpOnly: true, // Ensures the cookie is sent only over HTTP(S), not accessible to JavaScript
-            secure: process.env.NODE_ENV === 'production', // Ensures the cookie is sent only over HTTPS
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'production', 
             maxAge: 3600000 // 1 hour
         });
         

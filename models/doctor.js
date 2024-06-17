@@ -31,6 +31,11 @@ const DocotorSchema = new mongoose.Schema({
     },
     Gender:{
         type:String
+    },
+    checkingSIMC: {
+        type: Number,
+        enum: [0, 1],
+        default: 0
     }
 });
 
