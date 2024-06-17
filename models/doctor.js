@@ -36,7 +36,7 @@ const DocotorSchema = new mongoose.Schema({
 
 
 // Pre-save hook to hash the password before saving
-DoctorSchema.pre('save', async function(next) {
+DocotorSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
     try {
         const salt = await bcrypt.genSalt(10);
@@ -48,7 +48,7 @@ DoctorSchema.pre('save', async function(next) {
 });
 
 // Method to compare password
-DoctorSchema.methods.comparePassword = function(candidatePassword) {
+DocotorSchema.methods.comparePassword = function(candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };
 
