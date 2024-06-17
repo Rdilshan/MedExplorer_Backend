@@ -1,4 +1,8 @@
 const Doctor = require('../models/doctor');
+const jwt = require('jsonwebtoken');
+
+const secret = 'your_jwt_secret'; 
+
 
 exports.createDoctor = async (req, res) => {
     try {
