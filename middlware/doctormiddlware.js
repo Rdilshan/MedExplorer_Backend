@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const secret = "your_jwt_secret";
+const secret = "your_jwt_secret1";
 
 exports.authMiddleware = async (req, res, next) => {
   const bearerHeader = req.headers["authorization"];
