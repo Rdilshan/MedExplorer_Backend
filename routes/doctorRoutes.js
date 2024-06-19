@@ -8,7 +8,7 @@ router.post('/create',doctorController.createDoctor );
 router.post('/login',doctorController.login );
 
 router.get('/profile', authMiddleware, doctorController.doctordetails);
-router.post('/profileEdit',doctorController.profileEdit);
+router.post('/uploadimg',doctorController.imageupload);
 
 
 
