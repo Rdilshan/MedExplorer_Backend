@@ -1,6 +1,10 @@
 const Doctor = require('../models/doctor');
 const jwt = require('jsonwebtoken');
 const bucket = require("../config/firebase");
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs').promises;
+const path = require('path');
+
 
 const secret = 'your_jwt_secret'; 
 
@@ -54,14 +58,19 @@ exports.doctordetails = async (req, res) => {
 }
 
 exports.profileEdit = async (req, res) => {
-    const { img } = req.body;
+    const { img, telephone, gender } = req.body;
 
     try {
         if (!img) {
             return res.status(400).send('Image is required.');
         }
 
-        const buffer = Buffer.from(img, 'base64'); // Assuming the image is sent as a base64 encoded string
+        // Read the image file from the provided file path
+        const filePath = img.replace('file://', ''); // Remove file:// prefix if present
+        const imageBuffer = await fs.readFile(filePath);
+        const base64Image = imageBuffer.toString('base64');
+
+        const buffer = Buffer.from(base64Image, 'base64'); // Convert base64 string to buffer
         const fileName = `profile_images/${uuidv4()}.jpg`;
         const file = bucket.file(fileName);
 
@@ -85,7 +94,6 @@ exports.profileEdit = async (req, res) => {
                 expires: '03-09-2491',
             });
 
-            // Now you have the URL of the uploaded image
             console.log('Image URL:', url);
 
             // Save the profile information to your database
