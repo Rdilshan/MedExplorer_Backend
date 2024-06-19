@@ -11,7 +11,7 @@ exports.authMiddleware = async (req, res, next) => {
 
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
-        return res.sendStatus(403);
+        return res.status(403).json({ error: 'Invalid authorization' });
       }
       req.user = decoded;
       next();
