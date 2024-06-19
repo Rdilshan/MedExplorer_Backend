@@ -46,3 +46,9 @@ exports.login = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 };
+
+
+exports.doctordetails = async (req, res) => {
+    res.json({ user: req.user });
+
+}
