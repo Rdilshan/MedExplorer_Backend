@@ -9,7 +9,7 @@ router.post('/login',doctorController.login );
 
 router.get('/profile', authMiddleware, doctorController.doctordetails);
 router.post('/uploadimg',doctorController.imageupload);
-
+router.post('/editprofile',authMiddleware,doctorController.profileEdit);
 
 
 module.exports = router;

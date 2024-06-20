@@ -2,12 +2,14 @@ const Doctor = require("../models/doctor");
 const jwt = require("jsonwebtoken");
 const bucket = require("../config/firebase");
 const multer = require("multer");
+const doctor = require("../models/doctor");
 const storage = multer.memoryStorage(); 
 const upload = multer({ storage: storage });
 
 
 const secret = "your_jwt_secret";
 
+// this function uses to create docotor 
 exports.createDoctor = async (req, res) => {
   try {
     const { name, email, password, NIC, SIMC } = req.body;
@@ -19,6 +21,8 @@ exports.createDoctor = async (req, res) => {
   }
 };
 
+
+// this function uses to login docotor 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -51,12 +55,13 @@ exports.login = async (req, res) => {
   }
 };
 
+// this function used to testing docotor middlware work
 exports.doctordetails = async (req, res) => {
   res.json({ user: req.user });
 };
 
 
-
+//this function used to image save in firebase
 exports.imageupload = [
   upload.single("image"), 
   async (req, res) => {
@@ -108,3 +113,30 @@ exports.imageupload = [
     blobStream.end(buffer);
   },
 ];
+
+//this function used to doctor profile edit
+exports.profileEdit = async (req ,res) =>{
+  try {
+    const {img ,telephone ,gender} = req.body;
+    const userid = req.user._id;
+
+    const doctor = await Doctor.findById(userid);
+
+    if (!doctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+
+   
+    if (img) doctor.ProfileIMG = img;
+    if (telephone) doctor.PhoneNumber = telephone;
+    if (gender) doctor.Gender = gender;
+
+    await doctor.save();
+
+    res.status(200).json({ message: 'Profile updated successfully', doctor });
+
+
+  } catch (error) {
+    res.status(400).json({ error: err.message });
+  }
+}
