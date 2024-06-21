@@ -118,7 +118,7 @@ exports.imageupload = [
 exports.profileEdit = async (req ,res) =>{
   try {
     const {img ,telephone ,gender} = req.body;
-    const userid = req.user._id;
+    const userid = req.user.id;
 
     const doctor = await Doctor.findById(userid);
 
