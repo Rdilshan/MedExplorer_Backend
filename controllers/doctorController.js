@@ -49,7 +49,7 @@ exports.login = async (req, res) => {
       maxAge: 3600000, // 1 hour
     });
 
-    res.status(200).json({ message: "Login successful", token: token });
+    res.status(200).json({ message: "Login successful", token: token,doctor:doctor });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
