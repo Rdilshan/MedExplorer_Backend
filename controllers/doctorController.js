@@ -57,7 +57,19 @@ exports.login = async (req, res) => {
 
 // this function used to testing docotor middlware work
 exports.doctordetails = async (req, res) => {
-  res.json({ user: req.user });
+  try {
+    const userid = req.user.id;
+    const doctor = await Doctor.findOne({ _id: userid }); 
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    res.status(200).json({ doctor });
+  } catch (error) {
+    console.error('Error fetching doctor details:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 };
 
 
