@@ -26,4 +26,8 @@ app.get("/test", function(req, res) {
 
 // Routes
 const doctorRoutes = require('./routes/doctorRoutes');
+const patientRoutes = require('./routes/patientRoutes');
+
+
 app.use('/doctor',doctorRoutes );
+app.use('/patient',patientRoutes );
