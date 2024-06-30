@@ -55,3 +55,20 @@ exports.login = async (req, res) => {
       res.status(400).json({ error: err.message });
     }
   };
+
+exports.patientdetails = async (req, res) => {
+    try {
+      const userid = req.user.id;
+      const patient = await Patient.findOne({ _id: userid }); 
+  
+      if (!patient) {
+        return res.status(404).json({ message: 'patient not found' });
+      }
+  
+      res.status(200).json({ patient });
+    } catch (error) {
+      console.error('Error fetching patient details:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+  
