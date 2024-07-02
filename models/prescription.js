@@ -13,6 +13,10 @@ const PrescriptionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    age: {
+        type: Number,
+        required: true
+    },
     PhoneNumber: {
         type: String,
         required: true

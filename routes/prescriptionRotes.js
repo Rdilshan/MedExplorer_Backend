@@ -6,7 +6,7 @@ const  {authMiddleware}   = require("../middlware/doctormiddlware")
 
 
 
-router.post('/create',prescriptionController.createPrescription );
+router.post('/create',authMiddleware,prescriptionController.createPrescription );
 router.get('/getdoctor',authMiddleware,prescriptionController.getdoctorprescription );
 
 

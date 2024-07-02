@@ -2,7 +2,9 @@ const Prescription = require("../models/prescription");
 
 exports.createPrescription = async (req, res) => {
     try {
-      const { patientid, doctorid, name, PhoneNumber, image, date } = req.body;
+        const doctorid = req.user.id; 
+
+      const { patientid,name, PhoneNumber, image,age} = req.body;
   
       const newPrescription = new Prescription({
         patientid,
@@ -10,7 +12,7 @@ exports.createPrescription = async (req, res) => {
         name,
         PhoneNumber,
         image,
-        date
+        age
       });
   
       await newPrescription.save();
