@@ -1,6 +1,6 @@
 const Patient = require("../models/patient");
 const jwt = require("jsonwebtoken");
-
+const secret = "your_jwt_secret";
 
 exports.createPatient = async (req, res) => {
     try {
