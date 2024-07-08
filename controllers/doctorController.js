@@ -152,3 +152,20 @@ exports.profileEdit = async (req ,res) =>{
     res.status(400).json({ error: err.message });
   }
 }
+
+
+exports.getDoctorById = async (req, res) => {
+  try {
+    const doctorId = req.params.id;
+    const doctor = await Doctor.findById(doctorId).select("-password");
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    res.status(200).json({ doctor });
+  } catch (error) {
+    console.error('Error fetching doctor details:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
