@@ -14,6 +14,7 @@ router.post('/editprofile',authMiddleware,doctorController.profileEdit);
 router.get('/:id', doctorController.getDoctorById);
 
 router.post('/forgetpwd', emailController.emailpwd);
+router.post('/pwdpinget', emailController.doctorpwdreset);
 
 
 module.exports = router;

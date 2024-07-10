@@ -1,6 +1,7 @@
 const Doctor = require("../models/doctor");
-var nodemailer = require('nodemailer');
+const Rest = require("../models/reset");
 
+var nodemailer = require("nodemailer");
 
 exports.emailpwd = async (req, res) => {
   try {
@@ -9,23 +10,39 @@ exports.emailpwd = async (req, res) => {
     const doctor = await Doctor.findOne({ SIMC });
 
     if (!doctor) {
-      return res.status(404).json({ error: 'Doctor not found' });
+      return res.status(404).json({ error: "Doctor not found" });
     }
 
     const id = doctor._id;
+    const pin = Math.floor(Math.random() * 9000) + 1000;
+
+    const result = await Rest.deleteMany({ id });
+
+    if (result.deletedCount === 0) {
+
+      const reset = new Rest({ id, pin });
+      await reset.save();
+
+    }else{
+
+      const reset = new Rest({ id, pin });
+      await reset.save();
+
+    }
+
 
     var transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
-        user: 'rd118755@gmail.com',
-        pass: 'auoouryzgaxckvws'
-      }
+        user: "rd118755@gmail.com",
+        pass: "auoouryzgaxckvws",
+      },
     });
-    
+
     var mailOptions = {
-      from: 'MedExplorer',
-      to: 'rdilshan077788@gmail.com',
-      subject: 'Forgot Your MedExplorer Password? Lets Fix That!',
+      from: "MedExplorer",
+      to: "rdilshan077788@gmail.com",
+      subject: "Forgot Your MedExplorer Password? Lets Fix That!",
       html: `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,7 +92,7 @@ exports.emailpwd = async (req, res) => {
     <div class="container">
         <h1>Welcome</h1>
         <p>Your password reset pin is below:</p>
-        <div class="pin">123456</div>
+        <div class="pin">${pin}</div>
         <p>This pin is valid for only 5 minutes.</p>
         <div class="footer">
             <p>If you did not request a password reset, please ignore this email.</p>
@@ -83,19 +100,52 @@ exports.emailpwd = async (req, res) => {
     </div>
 </body>
 </html>
-`
+`,
     };
-    
-    transporter.sendMail(mailOptions, function(error, info){
+
+    transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         res.status(400).json({ error: error });
       } else {
         res.status(200).json({ msg: info.response });
       }
     });
-
-
   } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+exports.doctorpwdreset = async (req, res) => {
+  try {
+    const { SIMC, pin } = req.body;
+
+    const doctor = await Doctor.findOne({ SIMC });
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    const id = doctor._id;
+
+    const reset = await Rest.findOne({ id });
+    if (!reset) {
+      return res.status(404).json({ error: "Reset not found" });
+    }
+
+    const currentTime = new Date();
+    const resetTime = new Date(reset.datetime);
+    const timeDifference = (currentTime - resetTime) / 1000 / 60; // difference in minutes
+
+    if (timeDifference > 5) {
+      return res.status(400).json({ error: "Reset pin has expired" });
+    } else {
+      if (pin == reset.pin) {
+        res.status(200).json({ msg: "Password reset successful" });
+      } else {
+        return res.status(400).json({ error: "Invalid pin" });
+      }
+    }
+  } catch (error) {
     res.status(400).json({ error: err.message });
   }
 };
