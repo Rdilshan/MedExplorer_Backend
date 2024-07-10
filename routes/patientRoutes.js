@@ -9,6 +9,7 @@ router.post('/create',patientController.createPatient );
 router.get('/get/:nic',authMiddleware,patientController.getoneusingnic );
 router.post('/login',patientController.login );
 router.get('/profile',patientauthMiddleware,patientController.patientdetails );
+router.post('/editprofile',patientauthMiddleware,patientController.profileEdit);
 
 
 

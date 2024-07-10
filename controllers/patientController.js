@@ -1,6 +1,5 @@
 const Patient = require("../models/patient");
 const jwt = require("jsonwebtoken");
-const secret = "your_jwt_secret";
 
 const secret = "your_jwt_secret";
 
@@ -74,3 +73,28 @@ exports.patientdetails = async (req, res) => {
     }
   };
   
+  exports.profileEdit = async (req ,res) =>{
+    try {
+      const {img ,telephone ,gender} = req.body;
+      const userid = req.user.id;
+  
+      const patient = await Patient.findById(userid);
+  
+      if (!patient) {
+        return res.status(404).json({ error: 'patient not found' });
+      }
+  
+     
+      if (img) patient.ProfileIMG = img;
+      if (telephone) patient.PhoneNumber = telephone;
+      if (gender) patient.Gender = gender;
+  
+      await patient.save();
+  
+      res.status(200).json({ message: 'Profile updated successfully', patient });
+  
+  
+    } catch (error) {
+      res.status(400).json({ error: err.message });
+    }
+  }
