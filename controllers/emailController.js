@@ -14,6 +14,7 @@ exports.emailpwd = async (req, res) => {
     }
 
     const id = doctor._id;
+    const senderemail = doctor.email;
     const pin = Math.floor(Math.random() * 9000) + 1000;
 
     const result = await Rest.deleteMany({ id });
@@ -41,7 +42,7 @@ exports.emailpwd = async (req, res) => {
 
     var mailOptions = {
       from: "MedExplorer",
-      to: "rdilshan077788@gmail.com",
+      to: senderemail,
       subject: "Forgot Your MedExplorer Password? Lets Fix That!",
       html: `<!DOCTYPE html>
 <html lang="en">
