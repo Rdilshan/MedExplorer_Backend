@@ -141,7 +141,7 @@ exports.doctorpwdreset = async (req, res) => {
       return res.status(400).json({ error: "Reset pin has expired" });
     } else {
       if (pin == reset.pin) {
-        res.status(200).json({ msg: "Password reset successful" });
+        res.status(200).json({ msg: "Password reset successful",data:id });
       } else {
         return res.status(400).json({ error: "Invalid pin" });
       }
