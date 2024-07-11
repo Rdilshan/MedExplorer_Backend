@@ -15,6 +15,8 @@ router.get('/:id', doctorController.getDoctorById);
 
 router.post('/forgetpwd', emailController.emailpwd);
 router.post('/pwdpinget', emailController.doctorpwdreset);
+router.post('/updatepwd', doctorController.updatepwd);
+
 
 
 module.exports = router;
