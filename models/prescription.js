@@ -29,6 +29,10 @@ const PrescriptionSchema = new mongoose.Schema({
         type: Date, 
         required: true,
         default: Date.now 
+    },
+    prediction: {
+        type: [String], 
+        // required: true
     }
 });
 
