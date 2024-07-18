@@ -32,7 +32,7 @@ const PrescriptionSchema = new mongoose.Schema({
     },
     prediction: {
         type: [String], 
-        // required: true
+        required: true
     }
 });
 

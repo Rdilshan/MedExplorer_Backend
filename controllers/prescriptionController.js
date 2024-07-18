@@ -4,7 +4,7 @@ exports.createPrescription = async (req, res) => {
   try {
     const doctorid = req.user.id;
 
-    const { patientid, name, PhoneNumber, image, age } = req.body;
+    const { patientid, name, PhoneNumber, image, age,prediction } = req.body;
 
     const newPrescription = new Prescription({
       patientid,
@@ -13,6 +13,7 @@ exports.createPrescription = async (req, res) => {
       PhoneNumber,
       image,
       age,
+      prediction
     });
 
     await newPrescription.save();
