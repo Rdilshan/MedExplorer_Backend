@@ -28,11 +28,13 @@ app.get("/test", function(req, res) {
 const doctorRoutes = require('./routes/doctorRoutes');
 const patientRoutes = require('./routes/patientRoutes');
 const prescriptionRotes = require('./routes/prescriptionRotes');
-const drugRoute = require('./routes/drugRoute')
+const drugRoute = require('./routes/drugRoute');
+const adminRoute = require('./routes/adminRoutes');
 
 
 app.use('/doctor',doctorRoutes );
 app.use('/patient',patientRoutes );
 app.use('/prescription',prescriptionRotes );
 app.use('/drug',drugRoute );
+app.use('/admin',adminRoute);
 
