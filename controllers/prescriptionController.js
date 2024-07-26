@@ -78,16 +78,13 @@ exports.getimageandprediction = async (req, res) => {
 
 exports.getPrescriptionById = async (req, res) => {
   try {
-    const PrescriptionId = req.params.id;
-    const Prescription = await Prescription.findById(PrescriptionId);
-
+    const id = req.params.id;
+    const Prescription = await Prescription.findOne({ _id: id });
     if (!Prescription) {
-      return res.status(404).json({ message: 'Prescription not found' });
+      return res.status(404).json({ error: "Prescription not found" });
     }
-
-    res.status(200).json({ Prescription });
-  } catch (error) {
-    console.error('Error fetching Prescription details:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(200).json(Prescription);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };
