@@ -1,7 +1,4 @@
 const Prescription = require("../models/prescription");
-const axios = require('axios');
-const FormData = require('form-data');
-const fs = require('fs');
 
 exports.createPrescription = async (req, res) => {
   try {
@@ -66,40 +63,15 @@ exports.getimageandprediction = async (req, res) => {
       return res.status(404).json({ error: "Send the prescription" });
     }
 
-    console.log('working here....');
 
-    const form = new FormData();
-    form.append('file', fs.createReadStream(image));
+    // Placeholder for integrating your machine learning model
+    // Assuming your ML model takes an image and returns a prediction
+    // You can replace this part with actual ML model integration
+    const prediction = ['Gentamicin', 'Penicillin V','Amoxicillin','Clavulanic acid'];
 
-    const response = await axios.post('https://randika123-prescription-predict.hf.space/predict', form, {
-      headers: {
-        ...form.getHeaders()
-      }
-    });
-
-    if (response.data && response.data.predictions) {
-      return res.status(200).json(response.data);
-    } else {
-      return res.status(500).json({ error: "Failed to get prediction" });
-    }
-
+    res.status(200).json({data:prediction});
 
   } catch (error) {
-    res.status(500).json({ error: "heere errot"+error.message });
-  }
-};
-
-
-exports.getPrescriptionById = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const PrescriptionData = await Prescription.findOne({ _id: id });
-    if (!PrescriptionData) {
-      return res.status(404).json({ error: "Prescription not found" });
-    }
-    res.status(200).json(PrescriptionData);
-    
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: error.message });
   }
 };
