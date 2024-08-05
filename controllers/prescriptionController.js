@@ -1,5 +1,5 @@
 const Prescription = require("../models/prescription");
-const FormData = require('form-data');
+const axios = require('axios');
 
 
 exports.createPrescription = async (req, res) => {
@@ -66,7 +66,7 @@ exports.getimageandprediction = async (req, res) => {
     }
 
 
-    const response = await axios.post('https://randika123-prescription-predict.hf.space');
+    const response = await axios.get('https://randika123-prescription-predict.hf.space');
 
     // Placeholder for integrating your machine learning model
     // Assuming your ML model takes an image and returns a prediction
