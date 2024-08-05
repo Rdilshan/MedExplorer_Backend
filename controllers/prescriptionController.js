@@ -106,7 +106,6 @@ exports.getpatientprescription = async (req, res) => {
 // };
 
 
-
 const fs = require('fs');
 const axios = require('axios');
 const FormData = require('form-data');
@@ -120,6 +119,9 @@ exports.getimageandprediction = async (req, res) => {
       return res.status(404).json({ error: "Send the prescription" });
     }
 
+    // Define temp file path
+    const tempImagePath = path.join('/tmp', 'tempImage.jpg');
+
     // Download the image
     const response = await axios({
       url: image,
@@ -127,7 +129,6 @@ exports.getimageandprediction = async (req, res) => {
       responseType: 'stream'
     });
 
-    const tempImagePath = path.join(__dirname, 'tempImage.jpg');
     const writer = fs.createWriteStream(tempImagePath);
 
     response.data.pipe(writer);
@@ -143,19 +144,31 @@ exports.getimageandprediction = async (req, res) => {
       })
       .then((response) => {
         // Clean up the downloaded file
-        fs.unlinkSync(tempImagePath);
+        try {
+          fs.unlinkSync(tempImagePath);
+        } catch (unlinkError) {
+          console.error('Error deleting temporary file:', unlinkError);
+        }
         res.status(200).json({ data: response.data });
       })
       .catch((err) => {
         // Clean up the downloaded file
-        fs.unlinkSync(tempImagePath);
+        try {
+          fs.unlinkSync(tempImagePath);
+        } catch (unlinkError) {
+          console.error('Error deleting temporary file:', unlinkError);
+        }
         console.log(err);
         res.status(500).send('An error occurred while uploading the file');
       });
     });
 
     writer.on('error', (err) => {
-      fs.unlinkSync(tempImagePath);
+      try {
+        fs.unlinkSync(tempImagePath);
+      } catch (unlinkError) {
+        console.error('Error deleting temporary file:', unlinkError);
+      }
       console.error(err);
       res.status(500).send('An error occurred while downloading the image');
     });
