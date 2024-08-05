@@ -64,7 +64,7 @@ exports.getimageandprediction = async (req, res) => {
       return res.status(404).json({ error: "Send the prescription" });
     }
 
-    console.log(image);
+    console.log('image'.image);
     const formData = new FormData();
     formData.append('file', image);
 
@@ -80,6 +80,7 @@ exports.getimageandprediction = async (req, res) => {
     res.status(200).json({ data: predictions });
 
   } catch (error) {
+    console.log('error'.error)
     res.status(500).json({ error: error.message });
   }
 };
