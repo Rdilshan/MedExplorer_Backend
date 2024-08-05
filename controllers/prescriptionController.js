@@ -67,7 +67,8 @@ exports.getimageandprediction = async (req, res) => {
     axios
       .get("https://randika123-prescription-predict.hf.space")
       .then((response) => {
-        res.send(response.data);
+        console.log(response.data);
+        res.status(200).json({data:response.data});
       })
       .catch((err) => {
         console.log(err);
