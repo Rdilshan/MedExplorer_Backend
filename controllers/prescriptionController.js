@@ -1,5 +1,7 @@
 const Prescription = require("../models/prescription");
 const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
 
 exports.createPrescription = async (req, res) => {
   try {
@@ -65,19 +67,22 @@ exports.getimageandprediction = async (req, res) => {
     }
 
     console.log('image'.image);
-    const formData = new FormData();
-    formData.append('file', image);
 
-    const response = await axios.post('https://randika123-prescription-predict.hf.space/predict', formData, {
+    const form = new FormData();
+    form.append('file', fs.createReadStream(image));
+
+    const response = await axios.post('https://randika123-prescription-predict.hf.space/predict', form, {
       headers: {
-        'Content-Type': 'multipart/form-data'
+        ...form.getHeaders()
       }
     });
-    console.log(response.data);
 
-    const predictions = response.data.predictions;
+    if (response.data && response.data.predictions) {
+      return res.status(200).json(response.data);
+    } else {
+      return res.status(500).json({ error: "Failed to get prediction" });
+    }
 
-    res.status(200).json({ data: predictions });
 
   } catch (error) {
     console.log('error'.error)
