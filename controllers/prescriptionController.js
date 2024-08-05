@@ -1,4 +1,6 @@
 const Prescription = require("../models/prescription");
+const FormData = require('form-data');
+
 
 exports.createPrescription = async (req, res) => {
   try {
@@ -64,12 +66,14 @@ exports.getimageandprediction = async (req, res) => {
     }
 
 
+    const response = await axios.post('https://randika123-prescription-predict.hf.space');
+
     // Placeholder for integrating your machine learning model
     // Assuming your ML model takes an image and returns a prediction
     // You can replace this part with actual ML model integration
-    const prediction = ['Gentamicin', 'Penicillin V','Amoxicillin','Clavulanic acid'];
+    // const prediction = ['Gentamicin', 'Penicillin V','Amoxicillin','Clavulanic acid'];
 
-    res.status(200).json({data:prediction});
+    res.status(200).json({data:response});
 
   } catch (error) {
     res.status(500).json({ error: error.message });
