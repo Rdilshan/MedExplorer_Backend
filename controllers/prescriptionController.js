@@ -149,7 +149,8 @@ exports.getimageandprediction = async (req, res) => {
         } catch (unlinkError) {
           console.error('Error deleting temporary file:', unlinkError);
         }
-        res.status(200).json({ data: response.data });
+        res.status(200).json({ data: response.data.predictions });
+
       })
       .catch((err) => {
         // Clean up the downloaded file
