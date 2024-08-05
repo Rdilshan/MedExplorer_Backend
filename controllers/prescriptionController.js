@@ -1,5 +1,9 @@
 const Prescription = require("../models/prescription");
 const axios = require("axios");
+const FormData = require('form-data');
+const fs = require('fs');
+
+
 
 exports.createPrescription = async (req, res) => {
   try {
@@ -64,16 +68,38 @@ exports.getimageandprediction = async (req, res) => {
       return res.status(404).json({ error: "Send the prescription" });
     }
 
-    axios
-      .get("https://randika123-prescription-predict.hf.space")
-      .then((response) => {
-        console.log(response.data);
-        res.status(200).json({data:response.data});
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).send("An error occurred while fetching data");
-      });
+    // axios
+    //   .get("https://randika123-prescription-predict.hf.space")
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     res.status(200).json({data:response.data});
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     res.status(500).send("An error occurred while fetching data");
+    //   });
+
+    const form = new FormData();
+    form.append('file', fs.createReadStream(image));
+
+
+    axios.post('https://randika123-prescription-predict.hf.space/predict', form, {
+      headers: {
+        ...form.getHeaders(),
+      },
+    })
+    .then((response) => {
+
+      fs.unlinkSync(file.path);
+      res.status(200).json({data:response.data});
+
+    })
+    .catch((err) => {
+      // Clean up the uploaded file
+      fs.unlinkSync(file.path);
+      console.log(err);
+      res.status(500).send('An error occurred while uploading the file');
+    });
 
     // const prediction = ['Gentamicin', 'Penicillin V','Amoxicillin','Clavulanic acid'];
 
