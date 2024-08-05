@@ -120,29 +120,51 @@ exports.getimageandprediction = async (req, res) => {
       return res.status(404).json({ error: "Send the prescription" });
     }
 
-    const form = new FormData();
-    form.append('file', fs.createReadStream(image));
-
-    axios.post('https://randika123-prescription-predict.hf.space/predict', form, {
-      headers: {
-        ...form.getHeaders(),
-      },
-    })
-    .then((response) => {
-      // Clean up the uploaded file
-      fs.unlinkSync(image);
-      res.status(200).json({ data: response.data });
-    })
-    .catch((err) => {
-      // Clean up the uploaded file
-      fs.unlinkSync(image);
-      console.log(err);
-      res.status(500).send('An error occurred while uploading the file');
+    // Download the image
+    const response = await axios({
+      url: image,
+      method: 'GET',
+      responseType: 'stream'
     });
+
+    const tempImagePath = path.join(__dirname, 'tempImage.jpg');
+    const writer = fs.createWriteStream(tempImagePath);
+
+    response.data.pipe(writer);
+
+    writer.on('finish', () => {
+      const form = new FormData();
+      form.append('file', fs.createReadStream(tempImagePath));
+
+      axios.post('https://randika123-prescription-predict.hf.space/predict', form, {
+        headers: {
+          ...form.getHeaders(),
+        },
+      })
+      .then((response) => {
+        // Clean up the downloaded file
+        fs.unlinkSync(tempImagePath);
+        res.status(200).json({ data: response.data });
+      })
+      .catch((err) => {
+        // Clean up the downloaded file
+        fs.unlinkSync(tempImagePath);
+        console.log(err);
+        res.status(500).send('An error occurred while uploading the file');
+      });
+    });
+
+    writer.on('error', (err) => {
+      fs.unlinkSync(tempImagePath);
+      console.error(err);
+      res.status(500).send('An error occurred while downloading the image');
+    });
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.getPrescriptionById = async (req, res) => {
   try {
