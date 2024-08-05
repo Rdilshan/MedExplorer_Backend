@@ -1,12 +1,11 @@
 const Prescription = require("../models/prescription");
-const axios = require('axios');
-
+const axios = require("axios");
 
 exports.createPrescription = async (req, res) => {
   try {
     const doctorid = req.user.id;
 
-    const { patientid, name, PhoneNumber, image, age,prediction } = req.body;
+    const { patientid, name, PhoneNumber, image, age, prediction } = req.body;
 
     const newPrescription = new Prescription({
       patientid,
@@ -15,7 +14,7 @@ exports.createPrescription = async (req, res) => {
       PhoneNumber,
       image,
       age,
-      prediction
+      prediction,
     });
 
     await newPrescription.save();
@@ -65,21 +64,23 @@ exports.getimageandprediction = async (req, res) => {
       return res.status(404).json({ error: "Send the prescription" });
     }
 
+    axios
+      .get("https://randika123-prescription-predict.hf.space")
+      .then((response) => {
+        res.send(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send("An error occurred while fetching data");
+      });
 
-    const response = await axios.get('https://randika123-prescription-predict.hf.space');
-
-    // Placeholder for integrating your machine learning model
-    // Assuming your ML model takes an image and returns a prediction
-    // You can replace this part with actual ML model integration
     // const prediction = ['Gentamicin', 'Penicillin V','Amoxicillin','Clavulanic acid'];
 
-    res.status(200).json({data:response});
-
+    // res.status(200).json({data:response});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 exports.getPrescriptionById = async (req, res) => {
   try {
@@ -89,7 +90,6 @@ exports.getPrescriptionById = async (req, res) => {
       return res.status(404).json({ error: "Prescription not found" });
     }
     res.status(200).json(PrescriptionData);
-    
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
