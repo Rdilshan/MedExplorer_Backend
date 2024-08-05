@@ -2,11 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
+const cors = require('cors')
 const app = express();
 
 
 app.use(bodyParser.json());
+app.use(cors());
 
 
 // Connect to MongoDB
@@ -28,9 +29,11 @@ app.get("/test", function(req, res) {
 const doctorRoutes = require('./routes/doctorRoutes');
 const patientRoutes = require('./routes/patientRoutes');
 const prescriptionRotes = require('./routes/prescriptionRotes');
+const drugRoute = require('./routes/drugRoute')
 
 
 app.use('/doctor',doctorRoutes );
 app.use('/patient',patientRoutes );
 app.use('/prescription',prescriptionRotes );
+app.use('/drug',drugRoute );
 
