@@ -98,3 +98,20 @@ exports.patientdetails = async (req, res) => {
       res.status(400).json({ error: err.message });
     }
   }
+
+  exports.updatepwd = async (req, res) => {
+    try {
+      const { patientid,newpassword } = req.body;
+  
+      const patient = await Patient.findById(patientid);
+      if (!patient) {
+        return res.status(404).json({ error: 'patient not found' });
+      } 
+      patient.password = newpassword;
+      await patient.save();
+      res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+      console.error('Error updating password:', error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  }
