@@ -1,4 +1,8 @@
 const Patient = require("../models/patient");
+const Prescription = require("../models/prescription");
+const Doctor = require("../models/doctor");
+
+
 const jwt = require("jsonwebtoken");
 
 const secret = "your_jwt_secret";
@@ -113,5 +117,25 @@ exports.patientdetails = async (req, res) => {
     } catch (error) {
       console.error('Error updating password:', error);
       res.status(500).json({ error: 'Server error' });
+    }
+  }
+
+  exports.yourdocotorlist = async (req, res) => {
+    try {
+      const userid = req.user.id;
+      const prescriptions = await Prescription.find({ patientid: userid }).select('doctorid');
+
+      if (!prescriptions) {
+        return res.status(404).json({ error: 'Doctor not found' });
+      }
+
+      const doctorIds = prescriptions.map(prescription => prescription.doctorid);
+
+      const doctors = await Doctor.find({ _id: { $in: doctorIds } });
+  
+      res.status(200).json({ doctors });
+    } catch (error) {
+      console.error('Error fetching patient details:', error);
+      res.status(500).json({ message: 'Server error' });
     }
   }

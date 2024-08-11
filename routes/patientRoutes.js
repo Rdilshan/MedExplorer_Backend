@@ -13,6 +13,8 @@ router.get('/get/:nic',authMiddleware,patientController.getoneusingnic );
 router.post('/login',patientController.login );
 router.get('/profile',patientauthMiddleware,patientController.patientdetails );
 router.post('/editprofile',patientauthMiddleware,patientController.profileEdit);
+router.get('/yourdoctor',patientauthMiddleware,patientController.yourdocotorlist);
+
 
 router.post('/updatepwd', patientController.updatepwd);
 router.post('/otpsend', emailController.patientotpsend);
