@@ -139,3 +139,13 @@ exports.patientdetails = async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   }
+
+  exports.lastchanneldoctor = async(req,res)=>{
+    const userid = req.user.id;
+    const prescription = await Prescription.findOne({ patientid: userid }).sort({ createdAt: -1 }).limit(1);
+    if (!prescription) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+    const doctor = await Doctor.findById(prescription.doctorid);
+    res.status(200).json({ doctor });
+  }
