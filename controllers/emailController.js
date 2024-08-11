@@ -265,3 +265,39 @@ exports.patientotpsend = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+
+exports.patientpwdreset = async (req, res) => {
+  try {
+    const { email, pin } = req.body;
+
+    const patient = await Patient.findOne({ email });
+
+    if (!patient) {
+      return res.status(404).json({ error: "patient not found" });
+    }
+
+    const id = patient._id;
+
+    const reset = await Rest.findOne({ id });
+    if (!reset) {
+      return res.status(404).json({ error: "Reset not found" });
+    }
+
+    const currentTime = new Date();
+    const resetTime = new Date(reset.datetime);
+    const timeDifference = (currentTime - resetTime) / 1000 / 60; // difference in minutes
+
+    if (timeDifference > 5) {
+      return res.status(400).json({ error: "Reset pin has expired" });
+    } else {
+      if (pin == reset.pin) {
+        res.status(200).json({ msg: "Password reset successful",data:id });
+      } else {
+        return res.status(400).json({ error: "Invalid pin" });
+      }
+    }
+  } catch (error) {
+    res.status(400).json({ error: err.message });
+  }
+};

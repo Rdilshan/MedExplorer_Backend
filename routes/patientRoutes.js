@@ -16,6 +16,8 @@ router.post('/editprofile',patientauthMiddleware,patientController.profileEdit);
 
 router.post('/updatepwd', patientController.updatepwd);
 router.post('/otpsend', emailController.patientotpsend);
+router.post('/checkotp', emailController.patientpwdreset);
+
 
 
 
